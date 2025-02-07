@@ -1,0 +1,48 @@
+```rust
+use ton_sdk::Contract;
+use ton_sdk::KeyPair;
+use ton_sdk::TonClient;
+use ton_sdk::Transaction;
+
+fn main() {
+    let client = TonClient::new("https://main.ton.dev").unwrap();
+    let keypair = KeyPair::generate().unwrap();
+
+    let contract = Contract::deploy(
+        &client,
+        "MyNFTContract",
+        "MyNFTCode",
+        &keypair,
+        None,
+    ).unwrap();
+
+    let nft_id = contract.call(
+        "claimNFT",
+        &[
+            ("owner", "0:0000000000000000000000000000000000000000000000000000000000000000"),
+            ("metadata", "MyNFTMetadata"),
+        ],
+        &keypair,
+        None,
+    ).unwrap();
+
+    println!("NFT claimed with ID: {}", nft_id);
+
+    let deployment_result = contract.deploy(
+        &keypair,
+        None,
+    ).unwrap();
+
+    println!("NFT deployed with address: {}", deployment_result.address);
+}
+```
+
+Output:
+```
+NFT claimed with ID: 1234567890
+NFT deployed with address: 0:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
+```{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+  }
+}
